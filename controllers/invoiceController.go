@@ -78,7 +78,7 @@ func GetInvoice(w http.ResponseWriter, r *http.Request) {
 
 	invoiceView.InvoiceId = invoice.InvoiceId
 	invoiceView.PaymentStatus = *&invoice.PaymentStatus
-	invoiceView.PaymentMethod = allOrderItems[0]["payment_due"]
+	invoiceView.PaymentDue = allOrderItems[0]["payment_due"]
 	invoiceView.TableNumber = allOrderItems[0]["table_number"]
 	invoiceView.OrderDetails = allOrderItems[0]["order_items"]
 

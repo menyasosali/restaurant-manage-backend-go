@@ -15,6 +15,7 @@ import (
 	"time"
 )
 
+var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 var orderCollection = database.OpenCollection(database.Client, "order")
 
 func GetOrders(w http.ResponseWriter, r *http.Request) {
@@ -129,7 +130,7 @@ func UpdateOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if order.TableId != nil {
-		if err := orderCollection.FindOne(ctx, bson.M{"order_id": table.TableId}).Decode(&table); err != nil {
+		if err := orderCollection.FindOne(ctx, bson.M{"table_id": order.TableId}).Decode(&table); err != nil {
 			msg := fmt.Sprintf("message: Order was not found")
 			http.Error(w, msg, http.StatusInternalServerError)
 			return
@@ -161,16 +162,17 @@ func UpdateOrder(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, msg, http.StatusInternalServerError)
 	}
 
-	resultJson, err := json.Marshal(result)
+	resultJSON, err := json.Marshal(result)
 	if err != nil {
 		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write(resultJson)
+	w.Write(resultJSON)
 }
 
 func OrderItemOrderCreator(order models.Order) string {
+	defer cancel()
 	order.CreatedAt, _ = time.Parse(time.RFC822, time.Now().Format(time.RFC822))
 	order.UpdatedAt, _ = time.Parse(time.RFC822, time.Now().Format(time.RFC822))
 	order.ID = primitive.NewObjectID()
