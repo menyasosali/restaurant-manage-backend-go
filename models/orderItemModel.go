@@ -10,7 +10,7 @@ type OrderItem struct {
 	Quantity    *string            `json:"quantity" validate:"required,eq=S|eq=M|eq=L"`
 	UnitPrice   *float64           `json:"unit_price" validate:"required"`
 	CreatedAt   time.Time          `json:"created_at"`
-	UpdateAt    time.Time          `json:"update_at"`
+	UpdatedAt   time.Time          `json:"update_at"`
 	FoodId      *string            `json:"food_id" validate:"required"`
 	OrderItemId string             `json:"order_item_id"`
 	OrderId     string             `json:"order_id" validate:"required`
